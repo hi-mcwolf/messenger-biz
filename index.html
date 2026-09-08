@@ -184,6 +184,33 @@ a { text-decoration: none; color: inherit; }
 .breadcrumb { display: none; }
 .page-head { display: none; }
 
+.page-tabs {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  margin: -8px 0 16px;
+}
+.page-tab {
+  position: relative;
+  padding: 0 2px 10px;
+  font-size: 14px;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+}
+.page-tab:hover { color: var(--text-1); }
+.page-tab.active { color: var(--primary); font-weight: 600; }
+.page-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--primary);
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--line);
@@ -217,7 +244,15 @@ a { text-decoration: none; color: inherit; }
 }
 .filter-item input, .filter-item select { width: auto; min-width: 140px; }
 .filter-item.wide input { min-width: 0; flex: 1; }
-.filter-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.filter-actions {
+  flex: 1 0 100%;
+  margin-left: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
 
 input[type="text"], input[type="password"], input[type="number"], input[type="url"],
 input[type="datetime-local"], input[type="file"], select, textarea {
@@ -406,6 +441,10 @@ table.tbl {
 .pg-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
 .pg-btn:disabled { opacity: .4; cursor: not-allowed; }
 .field-error { font-size: 12px; color: var(--danger); line-height: 1.4; margin-top: 4px; }
+.tbl-add { margin-top: 12px; }
+.tbl .draft-row > td { background: var(--primary-weak); vertical-align: top; }
+.tbl .draft-row input, .tbl .draft-row select { width: 100%; min-width: 120px; }
+.tbl .draft-row .col-actions { white-space: nowrap; }
 .field-hint { font-size: 12px; color: var(--text-3); line-height: 1.4; margin-top: 4px; }
 .hint-bar {
   background: var(--primary-weak);
@@ -698,7 +737,7 @@ table.tbl {
 
   const ROUTES = {
     account: { title: 'Business Account', desc: '配置 Messenger 商业账户、Page 与 Ad Account' },
-    subscription: { title: '订阅管理', desc: '查询 opt-in 用户与订阅状态' },
+    subscription: { title: '订阅管理', desc: '' },
     'sub-msg-query': { title: '订阅消息', desc: '查询、取消待发送、重试失败任务' },
     campaign: { title: '活动管理', desc: '营销消息必须关联 Campaign' }
   };
@@ -759,11 +798,11 @@ table.tbl {
     ],
     viberAccounts: ['BingoPlus Viber', 'Rewards Viber'],
     subscriptionTypes: [
-      { id: 'st_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', subscriptionType: 'Weekly Promo', status: '开启' },
-      { id: 'st_2', platform: 'messenger', businessAccount: 'BingoPlus Messenger', subscriptionType: 'Jackpot Alert', status: '开启' },
-      { id: 'st_3', platform: 'messenger', businessAccount: 'Rewards Messenger', subscriptionType: 'Rewards Update', status: '开启' },
-      { id: 'st_4', platform: 'messenger', businessAccount: 'Rewards Messenger', subscriptionType: 'VIP Offer', status: '关闭' },
-      { id: 'st_5', platform: 'messenger', businessAccount: 'Promo Messenger', subscriptionType: 'Flash Sale', status: '开启' }
+      { id: 'st_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', subscriptionType: 'Weekly Promo', status: '开启' },
+      { id: 'st_2', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Support', subscriptionType: 'Jackpot Alert', status: '开启' },
+      { id: 'st_3', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'Rewards Page', subscriptionType: 'Rewards Update', status: '开启' },
+      { id: 'st_4', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'VIP Club', subscriptionType: 'VIP Offer', status: '关闭' },
+      { id: 'st_5', platform: 'messenger', businessAccount: 'Promo Messenger', facebookPage: 'Promo Page', subscriptionType: 'Flash Sale', status: '开启' }
     ],
     subscriptions: [
       { id: 'sub_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', loginName: 'maria.santos', imUserId: 'ms_100861001', subscriptionType: 'Weekly Promo', initialSubscriptionDate: '2026-08-10 09:12:11', latestSubscriptionTime: '2026-08-15 18:22:01', lastLoginTime: '2026-08-16 08:11:09', subscriptionStatus: '已订阅', notificationMessagesToken: 'NMT_8f3a91c2d4e5b607', tokenStatus: '有效', nextEligibleDatetime: '2026-08-17 18:22:01' },
@@ -786,6 +825,16 @@ table.tbl {
       { id: 'sub_18', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', loginName: 'pedro.cruz', imUserId: 'ms_100861006', subscriptionType: 'Jackpot Alert', initialSubscriptionDate: '2026-08-16 07:20:00', latestSubscriptionTime: '2026-08-16 07:20:00', lastLoginTime: '2026-08-16 07:08:12', subscriptionStatus: '已订阅', notificationMessagesToken: 'NMT_pedro_jackpot1', tokenStatus: '有效', nextEligibleDatetime: '2026-08-17 07:20:00' },
       { id: 'sub_19', platform: 'viber', businessAccount: 'BingoPlus Viber', facebookPage: '', loginName: 'rosa.tan', imUserId: 'vb_200771001', subscriptionType: 'Promo Blast', initialSubscriptionDate: '2026-08-12 18:00:00', latestSubscriptionTime: '2026-08-15 18:00:00', lastLoginTime: '2026-08-16 09:00:01', subscriptionStatus: '已订阅', notificationMessagesToken: '', tokenStatus: '', nextEligibleDatetime: '-' },
       { id: 'sub_20', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', loginName: 'nina.bautista', imUserId: 'ms_100861010', subscriptionType: 'Weekly Promo', initialSubscriptionDate: '2026-08-14 21:00:00', latestSubscriptionTime: '2026-08-16 12:00:00', lastLoginTime: '2026-08-16 13:45:00', subscriptionStatus: '已订阅', notificationMessagesToken: 'NMT_nina_weekly010', tokenStatus: '有效', nextEligibleDatetime: '2026-08-17 12:00:00' }
+    ],
+    subscriptionGroups: [
+      { id: 'sg_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: 'VIP 高价值用户组', memberCount: 1280, pushableCount: 448, source: 'VIP', createdAt: '2026-08-10 09:30:00' },
+      { id: 'sg_2', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Support', groupName: '八月新注册用户组', memberCount: 2140, pushableCount: 749, source: 'New User', createdAt: '2026-08-11 14:05:20' },
+      { id: 'sg_3', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'Rewards Page', groupName: '积分活跃用户组', memberCount: 860, pushableCount: 301, source: 'High Value', createdAt: '2026-08-12 10:18:44' },
+      { id: 'sg_4', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'VIP Club', groupName: 'VIP 周末召回组', memberCount: 540, pushableCount: 189, source: 'Inactive 7d', createdAt: '2026-08-13 16:40:00' },
+      { id: 'sg_5', platform: 'messenger', businessAccount: 'Promo Messenger', facebookPage: 'Promo Page', groupName: '闪购名单导入组', memberCount: 1460, pushableCount: 511, source: 'flash_sale_users.csv', createdAt: '2026-08-14 08:22:10' },
+      { id: 'sg_6', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: '存款用户组', memberCount: 970, pushableCount: 339, source: 'Deposit', createdAt: '2026-08-15 11:11:11' },
+      { id: 'sg_7', platform: 'viber', businessAccount: 'BingoPlus Viber', facebookPage: '', groupName: 'Viber 服务通知组', memberCount: 1500, pushableCount: 525, source: 'viber_service_list.csv', createdAt: '2026-08-15 19:02:33' },
+      { id: 'sg_8', platform: 'viber', businessAccount: 'Rewards Viber', facebookPage: '', groupName: 'Viber 促销订阅组', memberCount: 800, pushableCount: 280, source: 'High Value', createdAt: '2026-08-16 09:45:00' }
     ],
     subscriptionMessages: [
       { id: 'sm_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', subscriptionType: 'Weekly Promo', taskName: '八月周促订阅邀请', targetUsers: 2140, subscribedUsers: 470, sendingTimeType: '立即', sendingTime: '2026-08-15 10:00:00', status: '成功', messageTitle: '订阅 Weekly Promo', messageContent: '第一时间获取每周优惠与活动提醒。', image: '', button: 'GET_UPDATES', protosTags: 'New User', uploadFileName: '', failReason: '' },
@@ -822,6 +871,7 @@ table.tbl {
 
   const state = {
     route: 'account',
+    subTab: 'users',
     loading: false,
     tables: {},
     filters: {},
@@ -855,7 +905,19 @@ table.tbl {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed && parsed.accounts) return parsed;
+        if (parsed && parsed.accounts) {
+          Object.keys(SEED).forEach(key => {
+            if (!Array.isArray(parsed[key])) parsed[key] = JSON.parse(JSON.stringify(SEED[key]));
+          });
+          parsed.subscriptionTypes.forEach(t => {
+            if (t.facebookPage != null) return;
+            const seeded = SEED.subscriptionTypes.find(s => s.id === t.id);
+            const acc = parsed.accounts.find(a => a.businessAccount === t.businessAccount);
+            const firstPage = acc && (acc.facebookPageIds || [])[0];
+            t.facebookPage = seeded ? seeded.facebookPage : (firstPage ? pageName(firstPage) : '');
+          });
+          return parsed;
+        }
       }
     } catch (e) { /* ignore */ }
     return JSON.parse(JSON.stringify(SEED));
@@ -1092,6 +1154,18 @@ table.tbl {
       (r.desc ? '<p class="page-desc">' + esc(r.desc) + '</p>' : '') + '</div>' +
       (extraBtns ? '<div class="stats-header-actions">' + extraBtns + '</div>' : '') + '</div>';
   }
+  function filterSearchActions() {
+    return '<div class="filter-actions">' +
+      '<button class="btn primary" data-act="search">搜索</button>' +
+      '<button class="btn" data-act="reset">Reset</button>' +
+      '</div>';
+  }
+  function pageTabsHtml(tabs, active) {
+    return '<div class="page-tabs">' + tabs.map(t =>
+      '<div class="page-tab' + (t.key === active ? ' active' : '') + '" data-act="sub-tab" data-tab="' +
+      esc(t.key) + '">' + esc(t.label) + '</div>'
+    ).join('') + '</div>';
+  }
 
   /* ========== Dashboard / placeholders ========== */
   function renderDashboard(el) {
@@ -1133,11 +1207,12 @@ table.tbl {
   function renderAccount(el) {
     const ts = tableState('account');
     const f = ensureFilters('account', { businessAccount: '', status: '' });
-    const btns = '<button class="btn" data-act="search">搜索</button><button class="btn" data-act="reset">Reset</button><button class="btn primary" data-act="add">Add</button>';
+    const btns = '<button class="btn primary" data-act="add">Add</button>';
     let html = pageChrome(btns) +
       '<div class="filters">' +
         filterSelect('商业账户 / Business Account', 'businessAccount', allBaOpts(), f.businessAccount) +
         filterSelect('Status', 'status', ['开启', '关闭'], f.status, '全部') +
+        filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
     let rows = store.accounts.filter(a => {
@@ -1187,6 +1262,9 @@ table.tbl {
       '<span style="color:var(--muted);">~</span>' +
       '<input type="datetime-local" step="1" data-filter="' + esc(keyTo) + '" value="' + esc(to || '') + '" />' +
       '</div></div>';
+  }
+  function pageDataKey() {
+    return state.route === 'subscription' ? subTabKey() : state.route;
   }
   function ensureFilters(route, defaults) {
     if (!state.filters[route]) state.filters[route] = Object.assign({}, defaults);
@@ -1339,17 +1417,47 @@ table.tbl {
       platform: '', businessAccount: '', facebookPage: '', loginName: '', subscriptionType: '',
       initialFrom: r.from, initialTo: r.to,
       latestFrom: r.from, latestTo: r.to,
-      loginFrom: r.from, loginTo: r.to
+      loginFrom: r.from, loginTo: r.to,
+      eligibleFrom: '', eligibleTo: ''
     };
   }
+  function defaultSubGroupFilters() {
+    return {
+      createdFrom: '', createdTo: '',
+      platform: '', businessAccount: '', facebookPage: '', groupName: ''
+    };
+  }
+  const SUB_TABS = [
+    { key: 'users', label: '订阅用户' },
+    { key: 'groups', label: '订阅用户组' }
+  ];
+  function subTabKey() {
+    return state.subTab === 'groups' ? 'subscription-group' : 'subscription';
+  }
+  function matchSubFilters(s, f) {
+    if (f.platform && s.platform !== f.platform) return false;
+    if (f.businessAccount && s.businessAccount !== f.businessAccount) return false;
+    if (f.facebookPage && !(s.facebookPage || '').toLowerCase().includes(f.facebookPage.toLowerCase())) return false;
+    if (f.loginName && !(s.loginName || '').toLowerCase().includes(f.loginName.toLowerCase())) return false;
+    if (f.subscriptionType && s.subscriptionType !== f.subscriptionType) return false;
+    if (!inRange(s.initialSubscriptionDate, f.initialFrom, f.initialTo)) return false;
+    if (!inRange(s.latestSubscriptionTime, f.latestFrom, f.latestTo)) return false;
+    if (!inRange(s.lastLoginTime, f.loginFrom, f.loginTo)) return false;
+    if (!inRange(s.nextEligibleDatetime, f.eligibleFrom, f.eligibleTo)) return false;
+    return true;
+  }
   function renderSubscription(el) {
+    if (state.subTab === 'groups') renderSubGroups(el);
+    else renderSubUsers(el);
+  }
+  function renderSubUsers(el) {
     const ts = tableState('subscription');
     const f = ensureFilters('subscription', defaultSubFilters());
     const types = Array.from(new Set(store.subscriptionTypes.map(t => t.subscriptionType).concat(
       store.subscriptions.map(s => s.subscriptionType)
     )));
-    const btns = '<button class="btn" data-act="search">搜索</button><button class="btn" data-act="reset">Reset</button><button class="btn" data-act="export">Export</button><button class="btn" data-act="open-subtype-mgr">订阅类型管理</button>';
-    let html = pageChrome(btns) + '<div class="filters">' +
+    const btns = '<button class="btn" data-act="export">Export</button>';
+    let html = pageChrome(btns) + pageTabsHtml(SUB_TABS, state.subTab) + '<div class="filters">' +
       filterSelect('平台 / Platform', 'platform', [{ value: 'viber', label: 'viber' }, { value: 'messenger', label: 'messenger' }], f.platform) +
       filterSelect('商业账户 / Business Account', 'businessAccount', allBaOpts(), f.businessAccount) +
       filterText('Facebook Page / Facebook Page', 'facebookPage', f.facebookPage, 200) +
@@ -1358,19 +1466,11 @@ table.tbl {
       filterRange('首次订阅时间 / Initial subscription date', 'initialFrom', 'initialTo', f.initialFrom, f.initialTo) +
       filterRange('最新订阅时间 / Latest subscription time', 'latestFrom', 'latestTo', f.latestFrom, f.latestTo) +
       filterRange('最后登录时间 / Last login time', 'loginFrom', 'loginTo', f.loginFrom, f.loginTo) +
+      filterRange('可推送时间 / Next eligible datetime', 'eligibleFrom', 'eligibleTo', f.eligibleFrom, f.eligibleTo) +
+      filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
-    let rows = store.subscriptions.filter(s => {
-      if (f.platform && s.platform !== f.platform) return false;
-      if (f.businessAccount && s.businessAccount !== f.businessAccount) return false;
-      if (f.facebookPage && !(s.facebookPage || '').toLowerCase().includes(f.facebookPage.toLowerCase())) return false;
-      if (f.loginName && !(s.loginName || '').toLowerCase().includes(f.loginName.toLowerCase())) return false;
-      if (f.subscriptionType && s.subscriptionType !== f.subscriptionType) return false;
-      if (!inRange(s.initialSubscriptionDate, f.initialFrom, f.initialTo)) return false;
-      if (!inRange(s.latestSubscriptionTime, f.latestFrom, f.latestTo)) return false;
-      if (!inRange(s.lastLoginTime, f.loginFrom, f.loginTo)) return false;
-      return true;
-    });
+    let rows = store.subscriptions.filter(s => matchSubFilters(s, f));
     rows = sortRows(rows, ts.sortKey || 'latestSubscriptionTime', ts.sortDir);
     const pg = paginate(rows, ts.page);
     ts.page = pg.page;
@@ -1399,27 +1499,145 @@ table.tbl {
   }
   function exportSubscriptions() {
     const f = readFilters('subscription');
-    const rows = store.subscriptions.filter(s => {
-      if (f.platform && s.platform !== f.platform) return false;
-      if (f.businessAccount && s.businessAccount !== f.businessAccount) return false;
-      if (f.facebookPage && !(s.facebookPage || '').toLowerCase().includes(f.facebookPage.toLowerCase())) return false;
-      if (f.loginName && !(s.loginName || '').toLowerCase().includes(f.loginName.toLowerCase())) return false;
-      if (f.subscriptionType && s.subscriptionType !== f.subscriptionType) return false;
-      if (!inRange(s.initialSubscriptionDate, f.initialFrom, f.initialTo)) return false;
-      if (!inRange(s.latestSubscriptionTime, f.latestFrom, f.latestTo)) return false;
-      if (!inRange(s.lastLoginTime, f.loginFrom, f.loginTo)) return false;
-      return true;
-    });
+    const rows = store.subscriptions.filter(s => matchSubFilters(s, f));
     downloadCSV('subscription-export.csv', [
       'Platform', 'Business Account', 'Facebook Page', 'Login Name', 'IM UserId',
       'Subscription Type', 'Initial subscription date', 'Latest subscription time', 'Last login time',
-      'Subscription Status'
+      'Next eligible datetime', 'Subscription Status'
     ], rows.map(s => [
       s.platform, s.businessAccount, s.facebookPage, s.loginName, s.imUserId,
       s.subscriptionType, s.initialSubscriptionDate, s.latestSubscriptionTime, s.lastLoginTime,
-      s.subscriptionStatus
+      s.nextEligibleDatetime, s.subscriptionStatus
     ]));
     toast('已按筛选结果导出 CSV（共 ' + rows.length + ' 条）', 'ok');
+  }
+
+  /* ========== Subscription Group ========== */
+  function renderSubGroups(el) {
+    const ts = tableState('subscription-group');
+    const f = ensureFilters('subscription-group', defaultSubGroupFilters());
+    const btns = '<button class="btn primary" data-act="open-create-group">新建订阅组</button>';
+    let html = pageChrome(btns) + pageTabsHtml(SUB_TABS, state.subTab) + '<div class="filters">' +
+      filterRange('创建时间 / Created At', 'createdFrom', 'createdTo', f.createdFrom, f.createdTo) +
+      filterSelect('平台 / Platform', 'platform', [{ value: 'viber', label: 'viber' }, { value: 'messenger', label: 'messenger' }], f.platform) +
+      filterSelect('商业账号 / Business Account', 'businessAccount', allBaOpts(), f.businessAccount) +
+      filterText('Facebook Page / Facebook Page', 'facebookPage', f.facebookPage, 200) +
+      filterText('订阅组名称 / Group Name', 'groupName', f.groupName, 100) +
+      filterSearchActions() +
+      '</div>';
+    if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
+    let rows = (store.subscriptionGroups || []).filter(g => {
+      if (f.platform && g.platform !== f.platform) return false;
+      if (f.businessAccount && g.businessAccount !== f.businessAccount) return false;
+      if (f.facebookPage && !(g.facebookPage || '').toLowerCase().includes(f.facebookPage.toLowerCase())) return false;
+      if (f.groupName && !(g.groupName || '').toLowerCase().includes(f.groupName.toLowerCase())) return false;
+      if (!inRange(g.createdAt, f.createdFrom, f.createdTo)) return false;
+      return true;
+    });
+    rows = sortRows(rows, ts.sortKey || 'createdAt', ts.sortDir);
+    const pg = paginate(rows, ts.page);
+    ts.page = pg.page;
+    html += '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+      th('平台 / Platform', 'platform', ts) +
+      th('商业账号 / Business Account', 'businessAccount', ts) +
+      th('Facebook Page / Facebook Page', 'facebookPage', ts) +
+      th('订阅组名称 / Group Name', 'groupName', ts) +
+      th('订阅组人数 / Members', 'memberCount', ts) +
+      th('可推送数量 / Pushable', 'pushableCount', ts) +
+      th('创建时间 / Created At', 'createdAt', ts) +
+      '</tr></thead><tbody>';
+    if (!pg.rows.length) html += '<tr><td colspan="7">' + emptyHtml('没有符合筛选条件的订阅用户组') + '</td></tr>';
+    pg.rows.forEach(g => {
+      html += '<tr><td>' + esc(g.platform) + '</td><td>' + esc(g.businessAccount) + '</td>' +
+        '<td>' + esc(g.facebookPage || '-') + '</td><td>' + esc(g.groupName) + '</td>' +
+        '<td>' + esc(String(g.memberCount || 0)) + '</td><td>' + esc(String(g.pushableCount || 0)) + '</td>' +
+        '<td>' + esc(g.createdAt) + '</td></tr>';
+    });
+    html += '</tbody></table></div>' + pager(pg);
+    el.innerHTML = html;
+  }
+  function emptySubGroupForm() {
+    const acc = messengerAccounts().find(a => a.status === '开启') || messengerAccounts()[0];
+    const ba = acc ? acc.businessAccount : '';
+    const pages = pagesOfAccount(ba);
+    return {
+      groupName: '',
+      platform: 'messenger',
+      businessAccount: ba,
+      facebookPage: pages[0] ? pages[0].name : '',
+      uploadFileName: '',
+      uploadCount: 0,
+      protosTags: ''
+    };
+  }
+  function openCreateGroupModal() {
+    state.modal = { type: 'sub-group', form: emptySubGroupForm(), errors: {} };
+    renderModal();
+  }
+  function subGroupModalBody() {
+    const m = state.modal;
+    const f = m.form;
+    const accs = f.platform === 'viber'
+      ? (store.viberAccounts || [])
+      : messengerAccounts().map(a => a.businessAccount);
+    const pages = pagesOfAccount(f.businessAccount);
+    const tag = CATALOG.protosTags.find(t => t.name === f.protosTags);
+    return wrapErr(m.errors, 'groupName', '<div class="form-row"><label>订阅组名称 / Group Name<span class="req">*</span></label>' +
+      '<input type="text" data-modal-field="groupName" maxlength="100" placeholder="1–100 个字符" value="' + esc(f.groupName) + '" /></div>') +
+      '<div class="form-grid">' +
+      '<div class="form-row"><label>平台 / Platform<span class="req">*</span></label>' +
+      '<select data-modal-field="platform">' + optList([{ value: 'messenger', label: 'messenger' }, { value: 'viber', label: 'viber' }], f.platform) + '</select></div>' +
+      wrapErr(m.errors, 'businessAccount', '<div class="form-row"><label>商业账号 / Business Account<span class="req">*</span></label>' +
+        '<select data-modal-field="businessAccount">' + optList(accs, f.businessAccount, '请选择商业账号') + '</select></div>') +
+      '</div>' +
+      (f.platform === 'messenger'
+        ? wrapErr(m.errors, 'facebookPage', '<div class="form-row"><label>Facebook Page / Facebook Page<span class="req">*</span></label>' +
+          '<select data-modal-field="facebookPage">' + optList(pages.map(p => p.name), f.facebookPage, pages.length ? '请选择 Facebook Page' : '请先选择商业账号') + '</select></div>')
+        : '<div class="form-row"><label>Facebook Page / Facebook Page</label>' +
+          '<input type="text" value="" placeholder="Viber 渠道无需 Facebook Page" disabled /></div>') +
+      wrapErr(m.errors, 'target', '<div class="form-grid"><div class="form-row"><label>上传 / Upload</label>' +
+        '<input type="file" data-modal-field="upload" accept=".csv,.txt,text/csv" />' +
+        (f.uploadFileName
+          ? '<div class="field-hint">已选择：' + esc(f.uploadFileName) + '（模拟 ' + f.uploadCount + ' 名用户）</div>'
+          : '<div class="field-hint">上传用户名单 CSV，与星灵标签二选一</div>') +
+        '</div><div class="form-row"><label>星灵标签 / Protos Tags</label>' +
+        '<select data-modal-field="protosTags">' + optList(CATALOG.protosTags.map(t => t.name), f.protosTags, '请选择已配置标签') + '</select>' +
+        (tag ? '<div class="field-hint">标签人群：' + tag.count + ' 名用户</div>' : '<div class="field-hint">选择标签后将清空已上传文件</div>') +
+        '</div></div>');
+  }
+  function saveSubGroup() {
+    const m = state.modal;
+    const f = m.form;
+    const errors = {};
+    const name = String(f.groupName || '').trim();
+    if (!name) errors.groupName = '请填写订阅组名称';
+    else if ((store.subscriptionGroups || []).some(g => g.businessAccount === f.businessAccount && g.groupName === name)) {
+      errors.groupName = '同一商业账号下订阅组名称不能重复';
+    }
+    if (!f.businessAccount) errors.businessAccount = '请选择商业账号';
+    if (f.platform === 'messenger' && !f.facebookPage) errors.facebookPage = '请选择 Facebook Page';
+    if (!f.uploadFileName && !f.protosTags) errors.target = '请通过上传或星灵标签选择用户，二者必选其一';
+    if (f.uploadFileName && f.protosTags) errors.target = '上传与星灵标签只能选择一种';
+    m.errors = errors;
+    if (Object.keys(errors).length) { renderModal(); return; }
+    const tag = CATALOG.protosTags.find(t => t.name === f.protosTags);
+    const memberCount = f.uploadCount || (tag ? tag.count : 0);
+    store.subscriptionGroups.unshift({
+      id: nextId('sg'),
+      platform: f.platform,
+      businessAccount: f.businessAccount,
+      facebookPage: f.platform === 'messenger' ? f.facebookPage : '',
+      groupName: name,
+      memberCount: memberCount,
+      pushableCount: Math.floor(memberCount * 0.35),
+      source: f.uploadFileName || f.protosTags,
+      createdAt: toDisplayDt(new Date())
+    });
+    saveStore();
+    closeModal();
+    toast('订阅组已创建', 'ok');
+    tableState('subscription-group').page = 1;
+    renderPage();
   }
   function openSubDetail(id) {
     const s = store.subscriptions.find(x => x.id === id);
@@ -1436,6 +1654,8 @@ table.tbl {
   /* ========== Subscription Type ========== */
   function subtypeListHtml() {
     const ts = tableState('subscription-type');
+    const m = state.modal;
+    const draft = m ? m.draft : null;
     let rows = sortRows(store.subscriptionTypes, ts.sortKey || 'subscriptionType', ts.sortDir);
     const pg = paginate(rows, ts.page);
     ts.page = pg.page;
@@ -1443,56 +1663,85 @@ table.tbl {
       '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
       th('Platform / 平台', 'platform', ts) +
       th('Business Account / 商业账户', 'businessAccount', ts) +
+      th('Facebook Page / Facebook Page', 'facebookPage', ts) +
       th('Subscription Type / 订阅类型', 'subscriptionType', ts) +
       th('Status / 状态', 'status', ts) +
       '<th class="no-sort col-actions">Actions</th></tr></thead><tbody>';
-    if (!pg.rows.length) html += '<tr><td colspan="5">' + emptyHtml('暂无订阅类型') + '</td></tr>';
+    if (!pg.rows.length && !draft) html += '<tr><td colspan="6">' + emptyHtml('暂无订阅类型') + '</td></tr>';
     pg.rows.forEach(t => {
       const toggle = t.status === '开启' ? '关闭' : '开启';
       html += '<tr><td>' + esc(t.platform) + '</td><td>' + esc(t.businessAccount) + '</td>' +
+        '<td>' + esc(t.facebookPage || '-') + '</td>' +
         '<td>' + esc(t.subscriptionType) + '</td><td>' + statusTag(t.status) + '</td>' +
         '<td class="col-actions"><button class="btn sm" data-act="toggle-type" data-id="' + esc(t.id) + '">' + toggle + '</button></td></tr>';
     });
-    html += '</tbody></table></div>' + pager(pg);
+    if (draft) html += subtypeDraftRowHtml(draft, m.errors);
+    html += '</tbody></table></div>' + pager(pg) +
+      '<div class="tbl-add">' +
+      '<button class="btn" data-act="subtype-add"' + (draft ? ' disabled' : '') + '>+ 添加订阅类型</button>' +
+      '</div>';
     return html;
+  }
+  function subtypeDraftRowHtml(draft, errors) {
+    const accs = messengerAccounts().map(a => a.businessAccount);
+    const pages = pagesOfAccount(draft.businessAccount).map(p => p.name);
+    return '<tr class="draft-row"><td>messenger</td>' +
+      '<td class="' + (errors.businessAccount ? 'has-error' : '') + '">' +
+      '<select data-draft-field="businessAccount">' + optList(accs, draft.businessAccount, '请选择') + '</select>' +
+      fieldErr(errors, 'businessAccount') + '</td>' +
+      '<td class="' + (errors.facebookPage ? 'has-error' : '') + '">' +
+      '<select data-draft-field="facebookPage">' + optList(pages, draft.facebookPage, pages.length ? '请选择' : '请先选择账户') + '</select>' +
+      fieldErr(errors, 'facebookPage') + '</td>' +
+      '<td class="' + (errors.subscriptionType ? 'has-error' : '') + '">' +
+      '<input type="text" data-draft-field="subscriptionType" placeholder="请输入订阅类型" value="' + esc(draft.subscriptionType) + '" />' +
+      fieldErr(errors, 'subscriptionType') + '</td>' +
+      '<td>' + statusTag('开启') + '</td>' +
+      '<td class="col-actions"><button class="btn sm primary" data-act="subtype-save">保存</button>' +
+      '<button class="btn sm" data-act="subtype-cancel">取消</button></td></tr>';
   }
   function openSubTypeMgr() {
     tableState('subscription-type').page = 1;
-    state.modal = { type: 'subtype-mgr', view: 'list', form: null, errors: {} };
+    state.modal = { type: 'subtype-mgr', draft: null, errors: {} };
     renderModal();
   }
-  function openSubTypeAdd() {
+  function startSubTypeDraft() {
+    const m = state.modal;
     const acc = messengerAccounts().find(a => a.status === '开启') || messengerAccounts()[0];
-    state.modal = {
-      type: 'subtype-mgr',
-      view: 'add',
-      form: { platform: 'messenger', businessAccount: acc ? acc.businessAccount : '', subscriptionType: '' },
-      errors: {}
-    };
+    const ba = acc ? acc.businessAccount : '';
+    const pages = pagesOfAccount(ba);
+    m.draft = { businessAccount: ba, facebookPage: pages[0] ? pages[0].name : '', subscriptionType: '' };
+    m.errors = {};
+    tableState('subscription-type').page = Math.max(1, Math.ceil(store.subscriptionTypes.length / PAGE_SIZE));
     renderModal();
   }
   function saveSubType() {
     const m = state.modal;
-    const f = m.form;
+    const d = m.draft;
+    if (!d) return;
     const errors = {};
-    if (!f.businessAccount) errors.businessAccount = '请选择 Business Account';
-    if (!String(f.subscriptionType || '').trim()) errors.subscriptionType = '请填写 Subscription Type';
-    const name = String(f.subscriptionType || '').trim();
-    if (name && store.subscriptionTypes.some(t => t.businessAccount === f.businessAccount && t.subscriptionType === name)) {
-      errors.subscriptionType = '同一 Business Account 下订阅类型名称不能重复';
+    const name = String(d.subscriptionType || '').trim();
+    if (!d.businessAccount) errors.businessAccount = '请选择 Business Account';
+    if (!d.facebookPage) errors.facebookPage = '请选择 Facebook Page';
+    if (!name) errors.subscriptionType = '请填写 Subscription Type';
+    else if (store.subscriptionTypes.some(t =>
+      t.businessAccount === d.businessAccount && t.facebookPage === d.facebookPage && t.subscriptionType === name
+    )) {
+      errors.subscriptionType = '同一 Page 下订阅类型名称不能重复';
     }
     m.errors = errors;
     if (Object.keys(errors).length) { renderModal(); return; }
     store.subscriptionTypes.unshift({
       id: nextId('st'),
       platform: 'messenger',
-      businessAccount: f.businessAccount,
+      businessAccount: d.businessAccount,
+      facebookPage: d.facebookPage,
       subscriptionType: name,
       status: '开启'
     });
     saveStore();
     toast('订阅类型已创建', 'ok');
-    state.modal = { type: 'subtype-mgr', view: 'list', form: null, errors: {} };
+    m.draft = null;
+    m.errors = {};
     renderModal();
   }
 
@@ -1680,7 +1929,8 @@ table.tbl {
       platform: '', businessAccount: '', subscriptionType: '', taskName: '', sendingTimeType: '', status: ''
     });
     const types = Array.from(new Set(store.subscriptionTypes.map(t => t.subscriptionType)));
-    const btns = '<button class="btn" data-act="search">搜索</button><button class="btn" data-act="reset">Reset</button><button class="btn primary" data-act="open-create-sm">Add</button>';
+    const btns = '<button class="btn" data-act="open-subtype-mgr">订阅类型管理</button>' +
+      '<button class="btn primary" data-act="open-create-sm">Add</button>';
     let html = pageChrome(btns) + '<div class="filters">' +
       filterSelect('平台 / Platform', 'platform', [{ value: 'messenger', label: 'messenger' }], f.platform) +
       filterSelect('商业账户 / Business Account', 'businessAccount', messengerAccounts().map(a => a.businessAccount), f.businessAccount) +
@@ -1693,6 +1943,7 @@ table.tbl {
         { value: '成功', label: '成功 / Success' },
         { value: '失败', label: '失败 / Failed' }
       ], f.status) +
+      filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
     let rows = store.subscriptionMessages.filter(t => {
@@ -1745,10 +1996,11 @@ table.tbl {
   function renderCampaign(el) {
     const ts = tableState('campaign');
     const f = ensureFilters('campaign', { businessAccount: '', status: '' });
-    const btns = '<button class="btn" data-act="search">搜索</button><button class="btn" data-act="reset">Reset</button><button class="btn primary" data-act="add">Add</button>';
+    const btns = '<button class="btn primary" data-act="add">Add</button>';
     let html = pageChrome(btns) + '<div class="filters">' +
       filterSelect('Business Account', 'businessAccount', messengerAccounts().map(a => a.businessAccount), f.businessAccount) +
       filterSelect('Status', 'status', ['草稿', '开启', '关闭', '预算耗尽', '失败', '已删除'], f.status) +
+      filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
     let rows = store.campaigns.filter(c => {
@@ -1876,7 +2128,7 @@ table.tbl {
       platform: '', businessAccount: '', campaign: '', messageType: '', status: '', timeFrom: '', timeTo: ''
     });
     const camps = Array.from(new Set(store.campaigns.map(c => c.campaignName)));
-    const btns = '<button class="btn" data-act="search">搜索</button><button class="btn" data-act="reset">Reset</button><button class="btn" data-act="export">Export</button>';
+    const btns = '<button class="btn" data-act="export">Export</button>';
     let html = pageChrome(btns) + '<div class="filters">' +
       filterSelect('Platform', 'platform', [{ value: 'messenger', label: 'Messenger' }, { value: 'viber', label: 'Viber' }], f.platform) +
       filterSelect('Business Account', 'businessAccount', allBaOpts(), f.businessAccount) +
@@ -1889,6 +2141,7 @@ table.tbl {
         { value: '失败', label: '失败 / Failed' }
       ], f.status) +
       filterRange('Sending Time', 'timeFrom', 'timeTo', f.timeFrom, f.timeTo) +
+      filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
     let rows = store.bizMessages.filter(b => {
@@ -1946,6 +2199,7 @@ table.tbl {
     state.modal = null;
     state.testing = false;
     document.getElementById('modal-root').innerHTML = '';
+    renderPage();
   }
   function renderModal() {
     const root = document.getElementById('modal-root');
@@ -1960,20 +2214,13 @@ table.tbl {
         '<button class="btn primary" data-act="modal-ok">Confirm</button>';
     } else if (m.type === 'subtype-mgr') {
       wide = true;
-      if (m.view === 'add') {
-        title = '新增订阅类型';
-        body = '<div class="form-row"><label>Platform<span class="req">*</span></label>' +
-          '<select data-modal-field="platform" disabled><option value="messenger" selected>messenger</option></select></div>' +
-          wrapErr(m.errors, 'businessAccount', '<div class="form-row"><label>Business Account<span class="req">*</span></label>' +
-            '<select data-modal-field="businessAccount">' + optList(messengerAccounts().map(a => a.businessAccount), m.form.businessAccount, '请选择已配置账户') + '</select></div>') +
-          wrapErr(m.errors, 'subscriptionType', '<div class="form-row"><label>Subscription Type<span class="req">*</span></label>' +
-            '<input type="text" data-modal-field="subscriptionType" placeholder="字符不限" value="' + esc(m.form.subscriptionType) + '" /></div>');
-        ft = '<button class="btn" data-act="subtype-back">取消</button><button class="btn primary" data-act="modal-ok">Confirm</button>';
-      } else {
-        title = '订阅类型管理';
-        body = subtypeListHtml();
-        ft = '<button class="btn" data-act="modal-cancel">关闭</button><button class="btn primary" data-act="subtype-add">Add</button>';
-      }
+      title = '订阅类型管理';
+      body = subtypeListHtml();
+      ft = '<button class="btn" data-act="modal-cancel">关闭</button>';
+    } else if (m.type === 'sub-group') {
+      title = '新建订阅组';
+      body = subGroupModalBody();
+      ft = '<button class="btn" data-act="modal-cancel">取消</button><button class="btn primary" data-act="modal-ok">Confirm</button>';
     } else if (m.type === 'create-sm') {
       title = '新建订阅消息';
       xl = true;
@@ -2046,6 +2293,19 @@ table.tbl {
     return '<dt>' + esc(k) + '</dt><dd>' + (html || esc(v)) + '</dd>';
   }
 
+  function readSubTypeDraft(e) {
+    const m = state.modal;
+    if (!m || !m.draft) return;
+    const key = e.target.getAttribute('data-draft-field');
+    m.draft[key] = e.target.value;
+    delete m.errors[key];
+    if (key === 'businessAccount') {
+      const pages = pagesOfAccount(m.draft.businessAccount);
+      m.draft.facebookPage = pages[0] ? pages[0].name : '';
+      renderModal();
+    }
+  }
+
   function readModalFields(e) {
     const m = state.modal;
     if (!m || !m.form) return;
@@ -2057,8 +2317,37 @@ table.tbl {
       renderModal();
       return;
     }
+    if (m.type === 'sub-group' && key === 'upload') {
+      const file = el.files && el.files[0];
+      if (file) {
+        m.form.uploadFileName = file.name;
+        m.form.uploadCount = 200 + Math.floor(Math.random() * 1800);
+        m.form.protosTags = '';
+        delete m.errors.target;
+        toast('已模拟解析上传文件，目标用户 ' + m.form.uploadCount + ' 人', 'ok');
+      }
+      renderModal();
+      return;
+    }
+    if (m.type === 'sub-group' && key === 'protosTags') {
+      m.form.protosTags = el.value;
+      if (m.form.protosTags) { m.form.uploadFileName = ''; m.form.uploadCount = 0; delete m.errors.target; }
+      renderModal();
+      return;
+    }
     m.form[key] = el.value;
     if (key === 'platform' || key === 'businessAccount' || key === 'pageId' || key === 'budgetType' || key === 'adAccountId') {
+      if (m.type === 'sub-group') {
+        if (key === 'platform') {
+          const first = store.accounts.find(a => a.platform === m.form.platform);
+          const viberBa = (store.viberAccounts || [])[0];
+          m.form.businessAccount = m.form.platform === 'messenger'
+            ? (first ? first.businessAccount : '')
+            : (viberBa || '');
+        }
+        const pages = pagesOfAccount(m.form.businessAccount);
+        m.form.facebookPage = m.form.platform === 'messenger' && pages[0] ? pages[0].name : '';
+      }
       if (key === 'businessAccount' && m.type === 'campaign') {
         const pages = pagesOfAccount(m.form.businessAccount);
         m.form.pageId = pages[0] ? pages[0].id : '';
@@ -2074,8 +2363,8 @@ table.tbl {
     const m = state.modal;
     if (!m) return;
     if (m.type === 'account') saveAccount();
-    else if (m.type === 'subtype-mgr') saveSubType();
     else if (m.type === 'create-sm') submitCreate();
+    else if (m.type === 'sub-group') saveSubGroup();
     else if (m.type === 'campaign') saveCampaign();
     else if (m.type === 'confirm' && typeof m.onOk === 'function') {
       const fn = m.onOk;
@@ -2107,31 +2396,41 @@ table.tbl {
     const id = t.getAttribute('data-id');
     if (act === 'nav') navigate(t.getAttribute('data-route'));
     else if (act === 'toggle-side') document.getElementById('sidebar').classList.toggle('open');
-    else if (act === 'search') {
-      readFilters(state.route);
-      tableState(state.route).page = 1;
+    else if (act === 'sub-tab') {
+      const tab = t.getAttribute('data-tab');
+      if (tab === state.subTab) return;
+      state.subTab = tab;
+      renderPage();
+    } else if (act === 'search') {
+      readFilters(pageDataKey());
+      tableState(pageDataKey()).page = 1;
       withLoading();
     } else if (act === 'reset') {
-      if (state.route === 'subscription') state.filters.subscription = defaultSubFilters();
-      else state.filters[state.route] = {};
-      tableState(state.route).page = 1;
+      const key = pageDataKey();
+      if (key === 'subscription') state.filters.subscription = defaultSubFilters();
+      else if (key === 'subscription-group') state.filters['subscription-group'] = defaultSubGroupFilters();
+      else state.filters[key] = {};
+      tableState(key).page = 1;
       withLoading();
     } else if (act === 'add') {
       if (state.route === 'account') openAccountModal(null);
       else if (state.route === 'campaign') openCampaignModal();
     } else if (act === 'open-subtype-mgr') openSubTypeMgr();
-    else if (act === 'subtype-add') openSubTypeAdd();
-    else if (act === 'subtype-back') {
-      state.modal = { type: 'subtype-mgr', view: 'list', form: null, errors: {} };
+    else if (act === 'subtype-add') startSubTypeDraft();
+    else if (act === 'subtype-save') saveSubType();
+    else if (act === 'subtype-cancel') {
+      state.modal.draft = null;
+      state.modal.errors = {};
       renderModal();
-    } else if (act === 'open-create-sm') openCreateSmModal(); else if (act === 'edit') openAccountModal(id);
+    } else if (act === 'open-create-group') openCreateGroupModal();
+    else if (act === 'open-create-sm') openCreateSmModal(); else if (act === 'edit') openAccountModal(id);
     else if (act === 'detail') openSubDetail(id);
     else if (act === 'export') {
       if (state.route === 'subscription') exportSubscriptions();
       else if (state.route === 'biz-query') exportBiz();
     } else if (act === 'sort') {
       if (t.classList.contains('no-sort')) return;
-      const tableKey = (state.modal && state.modal.type === 'subtype-mgr') ? 'subscription-type' : state.route;
+      const tableKey = (state.modal && state.modal.type === 'subtype-mgr') ? 'subscription-type' : pageDataKey();
       const ts = tableState(tableKey);
       const key = t.getAttribute('data-key');
       if (ts.sortKey === key) ts.sortDir = ts.sortDir === 'asc' ? 'desc' : 'asc';
@@ -2139,7 +2438,7 @@ table.tbl {
       if (state.modal && state.modal.type === 'subtype-mgr') renderModal();
       else renderPage();
     } else if (act === 'page') {
-      const tableKey = (state.modal && state.modal.type === 'subtype-mgr') ? 'subscription-type' : state.route;
+      const tableKey = (state.modal && state.modal.type === 'subtype-mgr') ? 'subscription-type' : pageDataKey();
       tableState(tableKey).page = Number(t.getAttribute('data-page'));
       if (state.modal && state.modal.type === 'subtype-mgr') renderModal();
       else renderPage();
@@ -2219,6 +2518,10 @@ table.tbl {
   });
 
   document.addEventListener('change', function (e) {
+    if (e.target.getAttribute('data-draft-field')) {
+      readSubTypeDraft(e);
+      return;
+    }
     if (e.target.getAttribute('data-modal-field')) {
       readModalFields(e);
       return;
