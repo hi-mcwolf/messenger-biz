@@ -710,7 +710,7 @@ table.tbl {
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
 (function () {
-  const LS_KEY = 'dplus_mbm_v3';
+  const LS_KEY = 'dplus_mbm_v4';
   const PAGE_SIZE = 10;
 
   const CATALOG = {
@@ -739,7 +739,8 @@ table.tbl {
     account: { title: 'Business Account', desc: '配置 Messenger 商业账户、Page 与 Ad Account' },
     subscription: { title: '订阅管理', desc: '' },
     'sub-msg-query': { title: '订阅消息', desc: '查询、取消待发送、重试失败任务' },
-    campaign: { title: '活动管理', desc: '营销消息必须关联 Campaign' }
+    campaign: { title: '活动管理', desc: '营销消息必须关联 Campaign' },
+    'biz-query': { title: 'Business Message', desc: '星灵标签、上传文件、订阅组三选一；nmt 自动准备与定时发送' }
   };
 
   function pad(n) { return String(n).padStart(2, '0'); }
@@ -834,7 +835,9 @@ table.tbl {
       { id: 'sg_5', platform: 'messenger', businessAccount: 'Promo Messenger', facebookPage: 'Promo Page', groupName: '闪购名单导入组', memberCount: 1460, pushableCount: 511, source: 'flash_sale_users.csv', createdAt: '2026-08-14 08:22:10' },
       { id: 'sg_6', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: '存款用户组', memberCount: 970, pushableCount: 339, source: 'Deposit', createdAt: '2026-08-15 11:11:11' },
       { id: 'sg_7', platform: 'viber', businessAccount: 'BingoPlus Viber', facebookPage: '', groupName: 'Viber 服务通知组', memberCount: 1500, pushableCount: 525, source: 'viber_service_list.csv', createdAt: '2026-08-15 19:02:33' },
-      { id: 'sg_8', platform: 'viber', businessAccount: 'Rewards Viber', facebookPage: '', groupName: 'Viber 促销订阅组', memberCount: 800, pushableCount: 280, source: 'High Value', createdAt: '2026-08-16 09:45:00' }
+      { id: 'sg_8', platform: 'viber', businessAccount: 'Rewards Viber', facebookPage: '', groupName: 'Viber 促销订阅组', memberCount: 800, pushableCount: 280, source: 'High Value', createdAt: '2026-08-16 09:45:00' },
+      { id: 'sg_9', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: '名单导入图文（任务自动创建）', memberCount: 120000, pushableCount: 0, source: 'import_1026.csv', sourceType: 'auto', taskId: 'bm_14', createdAt: '2026-10-26 14:00:05' },
+      { id: 'sg_10', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: '沉睡用户召回按钮（任务自动创建）', memberCount: 450000, pushableCount: 0, source: '沉睡30天', sourceType: 'auto', taskId: 'bm_15', createdAt: '2026-10-26 07:30:08' }
     ],
     subscriptionMessages: [
       { id: 'sm_1', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', subscriptionType: 'Weekly Promo', taskName: '八月周促订阅邀请', targetUsers: 2140, subscribedUsers: 470, sendingTimeType: '立即', sendingTime: '2026-08-15 10:00:00', status: '成功', messageTitle: '订阅 Weekly Promo', messageContent: '第一时间获取每周优惠与活动提醒。', image: '', button: 'GET_UPDATES', protosTags: 'New User', uploadFileName: '', failReason: '' },
@@ -862,7 +865,10 @@ table.tbl {
       { id: 'bm_9', campaign: 'Support Reconnect', campaignId: '120398847265', platform: 'messenger', businessAccount: 'BingoPlus Messenger', taskName: '客服回访文本', messageType: 'Text', targetUsers: 300, sendingTime: '2026-08-09 15:00:00', status: '失败' },
       { id: 'bm_10', campaign: 'August Retention', campaignId: '120398847261', platform: 'messenger', businessAccount: 'BingoPlus Messenger', taskName: '晚间促销文本', messageType: 'Text', targetUsers: 1100, sendingTime: '2026-08-16 20:00:00', status: '待发送' },
       { id: 'bm_11', campaign: 'Promo Flash', campaignId: '120398847263', platform: 'messenger', businessAccount: 'Promo Messenger', taskName: '库存提醒图', messageType: 'Image', targetUsers: 360, sendingTime: '2026-08-13 18:18:18', status: '成功' },
-      { id: 'bm_12', campaign: 'VIP Weekend', campaignId: '120398847264', platform: 'messenger', businessAccount: 'Rewards Messenger', taskName: '专属礼包按钮', messageType: 'Button', targetUsers: 180, sendingTime: '2026-08-15 21:00:00', status: '成功' }
+      { id: 'bm_12', campaign: 'VIP Weekend', campaignId: '120398847264', platform: 'messenger', businessAccount: 'Rewards Messenger', taskName: '专属礼包按钮', messageType: 'Button', targetUsers: 180, sendingTime: '2026-08-15 21:00:00', status: '成功' },
+      { id: 'bm_13', campaign: 'August Retention', campaignId: '120398847261', platform: 'messenger', businessAccount: 'BingoPlus Messenger', taskName: 'V8 用户周末促销', messageType: 'Text', targetUsers: 320000, sendingTime: '2026-10-27 15:00:00', status: '等待准备', audienceSource: 'Protos Tag', sourceName: 'V8用户', estimatedUsers: 320000, prepareStartTime: '2026-10-27 11:30:00', tokenStartTime: '', tokenEndTime: '', actualSendTime: '', availableUsers: null },
+      { id: 'bm_14', campaign: 'August Retention', campaignId: '120398847261', platform: 'messenger', businessAccount: 'BingoPlus Messenger', taskName: '名单导入图文', messageType: 'Image', targetUsers: 120000, sendingTime: '2026-10-26 16:00:00', status: '准备中', audienceSource: 'Upload File', sourceName: 'import_1026.csv', estimatedUsers: 120000, prepareStartTime: '2026-10-26 14:00:00', tokenStartTime: '2026-10-26 14:00:05', tokenEndTime: '', actualSendTime: '', availableUsers: null, autoGroupId: 'sg_9' },
+      { id: 'bm_15', campaign: 'August Retention', campaignId: '120398847261', platform: 'messenger', businessAccount: 'BingoPlus Messenger', taskName: '沉睡用户召回按钮', messageType: 'Button', targetUsers: 450000, sendingTime: '2026-10-26 12:00:00', status: '发送延迟', audienceSource: 'Protos Tag', sourceName: '沉睡30天', estimatedUsers: 450000, prepareStartTime: '2026-10-26 07:30:00', tokenStartTime: '2026-10-26 07:30:08', tokenEndTime: '', actualSendTime: '', availableUsers: null, autoGroupId: 'sg_10' }
     ]
   };
 
@@ -962,7 +968,7 @@ table.tbl {
   }
   function statusTag(status) {
     const map = {
-      '待发送': 'pending', Pending: 'pending',
+      '待发送': 'pending', Pending: 'pending', '等待准备': 'pending', '准备中': 'info', '发送延迟': 'warn', '已取消': 'off',
       '发送中': 'sending', Sending: 'sending',
       '成功': 'success', Success: 'success',
       '失败': 'failed', Failed: 'failed',
@@ -1118,6 +1124,7 @@ table.tbl {
           item('subscription', '订阅管理', 'sub-item') +
           item('sub-msg-query', '订阅消息', 'sub-item') +
           item('campaign', '活动管理', 'sub-item') +
+          item('biz-query', '商业消息', 'sub-item') +
         '</div>' +
       '</nav>';
   }
@@ -1143,7 +1150,8 @@ table.tbl {
       account: renderAccount,
       subscription: renderSubscription,
       'sub-msg-query': renderQuerySubMsg,
-      campaign: renderCampaign
+      campaign: renderCampaign,
+      'biz-query': renderBizQuery
     };
     (map[state.route] || renderAccount)(el);
   }
@@ -1544,13 +1552,17 @@ table.tbl {
       th('订阅组名称 / Group Name', 'groupName', ts) +
       th('订阅组人数 / Members', 'memberCount', ts) +
       th('可推送数量 / Pushable', 'pushableCount', ts) +
+      th('来源 / Source', 'sourceType', ts) +
+      th('关联任务 / Task Id', 'taskId', ts) +
       th('创建时间 / Created At', 'createdAt', ts) +
       '</tr></thead><tbody>';
-    if (!pg.rows.length) html += '<tr><td colspan="7">' + emptyHtml('没有符合筛选条件的订阅用户组') + '</td></tr>';
+    if (!pg.rows.length) html += '<tr><td colspan="9">' + emptyHtml('没有符合筛选条件的订阅用户组') + '</td></tr>';
     pg.rows.forEach(g => {
       html += '<tr><td>' + esc(g.platform) + '</td><td>' + esc(g.businessAccount) + '</td>' +
         '<td>' + esc(g.facebookPage || '-') + '</td><td>' + esc(g.groupName) + '</td>' +
         '<td>' + esc(String(g.memberCount || 0)) + '</td><td>' + esc(String(g.pushableCount || 0)) + '</td>' +
+        '<td>' + (g.sourceType === 'auto' ? '<span class="tag info">任务自动创建</span>' : '手动创建') + '</td>' +
+        '<td>' + esc(g.taskId || '-') + '</td>' +
         '<td>' + esc(g.createdAt) + '</td></tr>';
     });
     html += '</tbody></table></div>' + pager(pg);
@@ -2128,19 +2140,23 @@ table.tbl {
       platform: '', businessAccount: '', campaign: '', messageType: '', status: '', timeFrom: '', timeTo: ''
     });
     const camps = Array.from(new Set(store.campaigns.map(c => c.campaignName)));
-    const btns = '<button class="btn" data-act="export">Export</button>';
+    const btns = '<button class="btn" data-act="export">Export</button><button class="btn primary" data-act="open-create-biz">Add</button>';
     let html = pageChrome(btns) + '<div class="filters">' +
       filterSelect('Platform', 'platform', [{ value: 'messenger', label: 'Messenger' }, { value: 'viber', label: 'Viber' }], f.platform) +
       filterSelect('Business Account', 'businessAccount', allBaOpts(), f.businessAccount) +
       filterSelect('Campaign', 'campaign', camps, f.campaign) +
       filterSelect('Message Type', 'messageType', ['Image', 'Text', 'Button'], f.messageType) +
       filterSelect('Status', 'status', [
+        { value: '等待准备', label: '等待准备 / Waiting' },
+        { value: '准备中', label: '准备中 / Preparing' },
         { value: '待发送', label: '待发送 / Pending' },
+        { value: '发送延迟', label: '发送延迟 / Delayed' },
         { value: '发送中', label: '发送中 / Sending' },
         { value: '成功', label: '成功 / Success' },
-        { value: '失败', label: '失败 / Failed' }
+        { value: '失败', label: '失败 / Failed' },
+        { value: '已取消', label: '已取消 / Cancelled' }
       ], f.status) +
-      filterRange('Sending Time', 'timeFrom', 'timeTo', f.timeFrom, f.timeTo) +
+      filterRange('Scheduled Time', 'timeFrom', 'timeTo', f.timeFrom, f.timeTo) +
       filterSearchActions() +
       '</div>';
     if (state.loading) { el.innerHTML = html + loadingHtml(); return; }
@@ -2162,16 +2178,24 @@ table.tbl {
       th('Business Account', 'businessAccount', ts) +
       th('Task Name', 'taskName', ts) +
       th('Message Type', 'messageType', ts) +
+      th('Audience Source', 'audienceSource', ts) +
       th('Target Users', 'targetUsers', ts) +
-      th('Sending Time', 'sendingTime', ts) +
+      th('Scheduled Time', 'sendingTime', ts) +
+      th('Actual Send Time', 'actualSendTime', ts) +
       th('Status', 'status', ts) +
+      '<th class="no-sort">Action</th>' +
       '</tr></thead><tbody>';
-    if (!pg.rows.length) html += '<tr><td colspan="8">' + emptyHtml('暂无 Biz 消息任务') + '</td></tr>';
+    if (!pg.rows.length) html += '<tr><td colspan="11">' + emptyHtml('暂无 Biz 消息任务') + '</td></tr>';
     pg.rows.forEach(b => {
       html += '<tr><td>' + esc(b.campaign || '-') + '</td><td>' + esc(platformLabel(b.platform)) + '</td>' +
         '<td>' + esc(b.businessAccount) + '</td><td>' + esc(b.taskName) + '</td>' +
-        '<td>' + esc(b.messageType) + '</td><td>' + b.targetUsers + '</td>' +
-        '<td>' + esc(b.sendingTime) + '</td><td>' + statusTag(b.status) + '</td></tr>';
+        '<td>' + esc(b.messageType) + '</td>' +
+        '<td>' + esc(b.audienceSource ? b.audienceSource + (b.sourceName ? '：' + b.sourceName : '') : '-') + '</td>' +
+        '<td>' + b.targetUsers + (b.estimatedUsers && !b.tokenEndTime && BIZ_PENDING.indexOf(b.status) >= 0 ? '（预计）' : '') + '</td>' +
+        '<td>' + esc(b.sendingTime) + '</td><td>' + esc(b.actualSendTime || '-') + '</td><td>' + statusTag(b.status) + '</td>' +
+        '<td class="col-actions"><button class="btn sm" data-act="biz-detail" data-id="' + esc(b.id) + '">Detail</button>' +
+        (BIZ_CANCELABLE.indexOf(b.status) >= 0 ? '<button class="btn sm danger" data-act="cancel-biz" data-id="' + esc(b.id) + '">Cancel</button>' : '') +
+        '</td></tr>';
     });
     html += '</tbody></table></div>' + pager(pg);
     el.innerHTML = html;
@@ -2192,6 +2216,310 @@ table.tbl {
       rows.map(b => [b.campaign, b.platform, b.businessAccount, b.taskName, b.messageType, b.targetUsers, b.sendingTime, b.status])
     );
     toast('已导出 CSV（共 ' + rows.length + ' 条）', 'ok');
+  }
+
+
+  /* ========== Biz message: create / auto prepare / detail ========== */
+  const BIZ_SPEED = 130000, BIZ_BUFFER = 45, BIZ_MIN_LEAD = 60, BIZ_STEP = 30;
+  const BIZ_PENDING = ['等待准备', '准备中', '发送延迟'];
+  const BIZ_CANCELABLE = ['等待准备', '准备中', '待发送', '发送延迟'];
+  const BIZ_TAGS = [
+    { name: 'V8用户', count: 320000 },
+    { name: '高价值用户', count: 150000 },
+    { name: '新注册用户', count: 80000 },
+    { name: '沉睡30天', count: 450000 }
+  ];
+  function bizLeadMinutes(n) {
+    return Math.max(BIZ_MIN_LEAD, Math.ceil((n / BIZ_SPEED * 60 + BIZ_BUFFER) / BIZ_STEP) * BIZ_STEP);
+  }
+  function fmtLead(m) {
+    const h = Math.floor(m / 60), mm = m % 60;
+    return (h ? h + ' 小时' : '') + (mm ? (h ? ' ' : '') + mm + ' 分钟' : '');
+  }
+  function fmtMoney(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function emptyBizForm() {
+    const acc = messengerAccounts().find(a => a.status === '开启');
+    const ba = acc ? acc.businessAccount : '';
+    const pages = pagesOfAccount(ba);
+    return {
+      businessAccount: ba,
+      facebookPage: pages[0] ? pages[0].name : '',
+      campaign: '',
+      audienceSource: '',
+      protosTag: '',
+      uploadFileName: '',
+      uploadCount: 0,
+      groupId: '',
+      taskName: '',
+      messageType: 'Text',
+      content: '',
+      sendingTimeType: '定时',
+      scheduledAt: toInputDt(new Date(Date.now() + 3 * 3600000)),
+      demoNmt: 'late',
+      errors: {}
+    };
+  }
+  function bizCampaigns(f) {
+    return store.campaigns.filter(c => c.businessAccount === f.businessAccount && c.status !== '已删除' && c.status !== '关闭');
+  }
+  function bizGroups(f) {
+    return (store.subscriptionGroups || []).filter(g => g.platform === 'messenger' && g.businessAccount === f.businessAccount && g.facebookPage === f.facebookPage);
+  }
+  function bizEstimated(f) {
+    if (f.audienceSource === 'Protos Tag') { const t = BIZ_TAGS.find(x => x.name === f.protosTag); return t ? t.count : 0; }
+    if (f.audienceSource === 'Upload File') return f.uploadCount || 0;
+    return 0;
+  }
+  function bizPlan(f) {
+    const n = bizEstimated(f);
+    if (!n) return null;
+    const lead = bizLeadMinutes(n);
+    const est = Math.round(n / BIZ_SPEED * 60 + BIZ_BUFFER);
+    if (f.sendingTimeType === '立即') return { n: n, lead: lead, est: est, immediate: true };
+    const sched = parseDt(f.scheduledAt);
+    if (!sched) return { n: n, lead: lead, est: est };
+    const start = new Date(sched.getTime() - lead * 60000);
+    return { n: n, lead: lead, est: est, sched: sched, start: start, late: start.getTime() <= Date.now() };
+  }
+  function openCreateBizModal() {
+    state.bizForm = emptyBizForm();
+    state.modal = { type: 'create-biz' };
+    renderModal();
+  }
+  function bizFormHtml() {
+    const f = state.bizForm;
+    const accs = messengerAccounts().filter(a => a.status === '开启');
+    const pages = pagesOfAccount(f.businessAccount);
+    const acc = store.accounts.find(a => a.businessAccount === f.businessAccount);
+    const camps = bizCampaigns(f);
+    const groups = bizGroups(f);
+    const grp = groups.find(g => g.id === f.groupId);
+    const src = f.audienceSource;
+    const tag = BIZ_TAGS.find(t => t.name === f.protosTag);
+    const radio = function (v, label) {
+      return '<label><input type="radio" name="bizsrc" data-biz-field="audienceSource" value="' + v + '"' + (src === v ? ' checked' : '') + ' /> ' + label + '</label>';
+    };
+    let srcCtl = '';
+    if (src === 'Protos Tag') {
+      srcCtl = '<div class="form-row"><label>星灵标签 / Protos Tag<span class="req">*</span></label>' +
+        '<select data-biz-field="protosTag">' + optList(BIZ_TAGS.map(t => t.name), f.protosTag, '请选择星灵标签') + '</select>' +
+        (tag ? '<div class="field-hint">预计人数 ' + fmtMoney(tag.count) + '；创建时不冻结用户明细，准备开始时才读取最新名单</div>' : '') + '</div>';
+    } else if (src === 'Upload File') {
+      srcCtl = '<div class="form-row"><label>上传文件 / Upload File<span class="req">*</span></label>' +
+        '<input type="file" data-biz-field="upload" accept=".csv,.xlsx" />' +
+        (f.uploadFileName ? '<div class="field-hint">已选择：' + esc(f.uploadFileName) + '，去重后 ' + fmtMoney(f.uploadCount) + ' 人（模拟）</div>' : '<div class="field-hint">支持 .csv / .xlsx；文件大小与行数上限 [待填]</div>') + '</div>';
+    } else if (src === 'Group') {
+      srcCtl = '<div class="form-row"><label>订阅组 / Group<span class="req">*</span></label>' +
+        '<select data-biz-field="groupId">' + optList(groups.map(g => ({ value: g.id, label: g.groupName + '（' + g.memberCount + ' 人）' })), f.groupId, groups.length ? '请选择订阅组' : '当前 Page 下没有订阅组') + '</select>' +
+        (grp ? '<div class="field-hint">组内 ' + fmtMoney(grp.memberCount) + ' 人，可推送 ' + fmtMoney(grp.pushableCount) + '</div>' : '') + '</div>';
+    }
+    const avail = !src ? '-' : (src === 'Group' ? (grp ? fmtMoney(grp.pushableCount) : '-') : '处理中');
+    const left = '<div>' +
+      '<div class="form-grid">' +
+      wrapErr(f.errors, 'businessAccount', '<div class="form-row"><label>Message Channel</label><select disabled><option>Messenger</option></select></div>') +
+      wrapErr(f.errors, 'businessAccount', '<div class="form-row"><label>Account<span class="req">*</span></label><select data-biz-field="businessAccount">' + optList(accs.map(a => a.businessAccount), f.businessAccount, '请选择账号') + '</select></div>') +
+      '</div><div class="form-grid">' +
+      wrapErr(f.errors, 'facebookPage', '<div class="form-row"><label>Page<span class="req">*</span></label><select data-biz-field="facebookPage">' + optList(pages.map(p => p.name), f.facebookPage, '请选择 Page') + '</select></div>') +
+      '<div class="form-row"><label>Ad Account</label><input type="text" disabled value="' + esc(acc ? adName(acc.adAccountId) : '') + '" /></div>' +
+      '</div>' +
+      wrapErr(f.errors, 'campaign', '<div class="form-row"><label>Campaign<span class="req">*</span></label><select data-biz-field="campaign">' + optList(camps.map(c => c.campaignName), f.campaign, camps.length ? '请选择 Campaign' : '该账号下没有可用 Campaign') + '</select></div>') +
+      wrapErr(f.errors, 'taskName', '<div class="form-row"><label>Task Name<span class="req">*</span></label><input type="text" data-biz-field="taskName" maxlength="100" placeholder="1–100 个字符" value="' + esc(f.taskName) + '" /></div>') +
+      wrapErr(f.errors, 'audienceSource', '<div class="form-row"><label>人群来源 / Audience Source<span class="req">*</span></label>' +
+        '<div class="radio-row">' + radio('Protos Tag', '星灵标签 / Protos Tag') + radio('Upload File', '上传文件 / Upload File') + radio('Group', '订阅组 / Group') + '</div>' +
+        '<div class="field-hint">三选一且必选，只能选 1 个</div></div>') +
+      (src ? wrapErr(f.errors, 'audienceDetail', srcCtl) : '') +
+      '<div class="form-row"><label>可发送人数 / Available Users</label><input type="text" disabled value="' + esc(avail) + '" />' +
+      (src && src !== 'Group' ? '<div class="field-hint">nmt（token）处理完成后显示实际值</div>' : '') + '</div>' +
+      '<div class="form-row"><label>Message Type<span class="req">*</span></label><select data-biz-field="messageType">' + optList(['Image', 'Text', 'Button'], f.messageType) + '</select></div>' +
+      wrapErr(f.errors, 'content', '<div class="form-row"><label>消息内容 / Content<span class="req">*</span></label><textarea data-biz-field="content" maxlength="500">' + esc(f.content) + '</textarea></div>') +
+      wrapErr(f.errors, 'scheduledAt', '<div class="form-row"><label>发送时间 / Sending Time<span class="req">*</span></label><div class="radio-row">' +
+        '<label><input type="radio" name="bizstt" data-biz-field="sendingTimeType" value="立即"' + (f.sendingTimeType === '立即' ? ' checked' : '') + ' /> 立即 / Immediately</label>' +
+        '<label><input type="radio" name="bizstt" data-biz-field="sendingTimeType" value="定时"' + (f.sendingTimeType === '定时' ? ' checked' : '') + ' /> 定时 / Scheduled</label></div></div>') +
+      (f.sendingTimeType === '定时' ? '<div class="form-row"><label>定时发送时间</label><input type="datetime-local" step="1" data-biz-field="scheduledAt" value="' + esc(f.scheduledAt) + '" /></div>' : '') +
+      '</div>';
+    const plan = bizPlan(f);
+    let pv = '<div style="font-weight:600;margin-bottom:8px;">计划预览</div>';
+    if (!plan) {
+      pv += '<div class="field-hint">' + (src === 'Group' ? '订阅组来源无需准备，已有可推送人数，创建后直接进入待发送。' : '选择星灵标签或上传文件后，显示预计人数与准备开始时间。') + '</div>';
+    } else {
+      pv += '<div class="elig-grid">' + eligItem(fmtMoney(plan.n), '预计人数 Estimated Users') +
+        eligItem(fmtLead(plan.est), '预计 nmt 耗时') + eligItem(fmtLead(plan.lead), '提前准备时间') + '</div>' +
+        '<dl class="detail-dl" style="margin-top:10px;">' +
+        kv('预计准备开始时间 / Estimated Prepare Start Time', plan.immediate ? '创建后立即开始准备' : (plan.late ? '将立即开始准备（已过 ' + toDisplayDt(plan.start) + '）' : toDisplayDt(plan.start))) + '</dl>' +
+        '<div class="field-hint">预计耗时 = 人数 ÷ 130000 × 60 + 45 分钟；提前准备时间 = max(60 分钟, 向上取整到 30 分钟档)。到计划发送时间 nmt 仍未完成，则顺延到完成时刻发送，不设上限。</div>' +
+        (plan.late ? '<div class="warn-bar">已过准备开始时间：不拦截创建，创建后立即开始准备，可能晚于计划时间发送。</div>' : '');
+    }
+    pv += '<div style="font-weight:600;margin:14px 0 4px;">演示设置（非产品字段）</div>' +
+      '<select data-biz-field="demoNmt">' + optList([{ value: 'late', label: 'nmt 处理超过计划时间（演示顺延）' }, { value: 'early', label: 'nmt 在计划时间前完成' }], f.demoNmt) + '</select>' +
+      '<div class="field-hint">原型为演示加速：准备约 2 秒，nmt 约 5 秒完成。</div>';
+    return '<div class="create-layout">' + left + '<div class="preview-card">' + pv + '</div></div>';
+  }
+  function bizFieldChange(k, el) {
+    const f = state.bizForm;
+    if (!f) return;
+    if (k === 'upload') {
+      const file = el.files && el.files[0];
+      if (file) { f.uploadFileName = file.name; f.uploadCount = 20000 + Math.floor(Math.random() * 580000); delete f.errors.audienceDetail; }
+    } else if (k === 'audienceSource') {
+      f.audienceSource = el.value; f.protosTag = ''; f.uploadFileName = ''; f.uploadCount = 0; f.groupId = '';
+      delete f.errors.audienceSource; delete f.errors.audienceDetail;
+    } else if (k === 'businessAccount') {
+      f.businessAccount = el.value;
+      const pages = pagesOfAccount(f.businessAccount);
+      f.facebookPage = pages[0] ? pages[0].name : '';
+      f.campaign = ''; f.groupId = '';
+    } else if (k === 'facebookPage') {
+      f.facebookPage = el.value; f.groupId = '';
+    } else if (k === 'taskName' || k === 'content') {
+      f[k] = el.value;
+      return;
+    } else {
+      f[k] = el.value;
+    }
+    renderModal();
+  }
+  function findBiz(id) { return store.bizMessages.find(x => x.id === id); }
+  function bizStep(id, expect, ms, fn) {
+    setTimeout(function () {
+      const t = findBiz(id);
+      if (!t || t.status !== expect) return;
+      fn(t);
+      saveStore();
+      if (state.route === 'biz-query' && !state.modal) renderPage();
+    }, ms);
+  }
+  function bizSend(id) {
+    const t = findBiz(id);
+    if (!t) return;
+    t.status = '发送中';
+    saveStore();
+    if (state.route === 'biz-query' && !state.modal) renderPage();
+    bizStep(id, '发送中', 1500, function (x) {
+      x.status = '成功';
+      x.actualSendTime = toDisplayDt(new Date());
+      toast('任务「' + x.taskName + '」已提交供应商发送', 'ok');
+    });
+  }
+  function bizNmtDone(id, immediateSend) {
+    const t = findBiz(id);
+    if (!t) return;
+    const n = t.estimatedUsers;
+    t.tokenEndTime = toDisplayDt(new Date());
+    t.availableUsers = Math.floor(n * 0.7);
+    t.targetUsers = n;
+    const g = (store.subscriptionGroups || []).find(x => x.id === t.autoGroupId);
+    if (g) g.pushableCount = t.availableUsers;
+    if (immediateSend || t.status === '发送延迟') { bizSend(id); }
+    else { t.status = '待发送'; toast('nmt 已完成，任务进入待发送', 'ok'); saveStore(); if (state.route === 'biz-query' && !state.modal) renderPage(); }
+  }
+  function bizStartPrepare(id) {
+    const t = findBiz(id);
+    if (!t) return;
+    const now = toDisplayDt(new Date());
+    t.status = '准备中';
+    t.tokenStartTime = now;
+    const gid = nextId('sg');
+    t.autoGroupId = gid;
+    store.subscriptionGroups.unshift({
+      id: gid, platform: 'messenger', businessAccount: t.businessAccount, facebookPage: t.facebookPage,
+      groupName: t.taskName + '（任务自动创建）', memberCount: t.estimatedUsers, pushableCount: 0,
+      source: t.sourceName, sourceType: 'auto', taskId: t.id, createdAt: now
+    });
+    saveStore();
+    if (state.route === 'biz-query' && !state.modal) renderPage();
+    if (t.demoNmt === 'late' && t.sendingTimeType === '定时') {
+      bizStep(id, '准备中', 2500, function (x) { x.status = '发送延迟'; toast('已到计划发送时间，nmt 未完成，任务进入发送延迟', 'err'); });
+      setTimeout(function () { const x = findBiz(id); if (x && (x.status === '发送延迟')) bizNmtDone(id, false); }, 6000);
+    } else {
+      setTimeout(function () { const x = findBiz(id); if (x && x.status === '准备中') bizNmtDone(id, x.sendingTimeType === '立即'); }, 5000);
+    }
+  }
+  function submitBiz() {
+    const f = state.bizForm;
+    const e = {};
+    if (!f.businessAccount) e.businessAccount = '请选择账号';
+    if (!f.facebookPage) e.facebookPage = '请选择 Page';
+    if (!f.campaign) e.campaign = '请选择 Campaign';
+    const tn = (f.taskName || '').trim();
+    if (!tn) e.taskName = '请填写任务名称';
+    if (!f.audienceSource) e.audienceSource = '请选择人群来源（星灵标签、上传文件、订阅组三选一）';
+    else if (f.audienceSource === 'Protos Tag' && !f.protosTag) e.audienceDetail = '请选择星灵标签';
+    else if (f.audienceSource === 'Upload File' && !f.uploadCount) e.audienceDetail = '请上传文件';
+    else if (f.audienceSource === 'Group' && !f.groupId) e.audienceDetail = '请选择订阅组';
+    if (!(f.content || '').trim()) e.content = '请填写消息内容';
+    if (f.sendingTimeType === '定时') {
+      const d = parseDt(f.scheduledAt);
+      if (!d) e.scheduledAt = '请选择定时发送时间';
+      else if (d.getTime() <= Date.now()) e.scheduledAt = '定时时间必须晚于当前时间';
+    }
+    f.errors = e;
+    if (Object.keys(e).length) { renderModal(); toast('请先修正表单错误', 'err'); return; }
+    const cp = store.campaigns.find(c => c.campaignName === f.campaign && c.businessAccount === f.businessAccount);
+    const isGroup = f.audienceSource === 'Group';
+    const grp = isGroup ? store.subscriptionGroups.find(g => g.id === f.groupId) : null;
+    const plan = bizPlan(f);
+    const isNow = f.sendingTimeType === '立即';
+    const task = {
+      id: nextId('bm'), campaign: f.campaign, campaignId: cp ? cp.campaignId : '', platform: 'messenger',
+      businessAccount: f.businessAccount, facebookPage: f.facebookPage, taskName: tn, messageType: f.messageType, content: f.content.trim(),
+      targetUsers: isGroup ? grp.memberCount : plan.n,
+      sendingTimeType: f.sendingTimeType,
+      sendingTime: isNow ? toDisplayDt(new Date()) : toDisplayDt(f.scheduledAt),
+      status: '待发送',
+      audienceSource: f.audienceSource,
+      sourceName: f.audienceSource === 'Protos Tag' ? f.protosTag : f.audienceSource === 'Upload File' ? f.uploadFileName : grp.groupName,
+      estimatedUsers: isGroup ? 0 : plan.n,
+      prepareStartTime: (!isGroup && plan.start) ? toDisplayDt(plan.start) : '',
+      tokenStartTime: '', tokenEndTime: '', actualSendTime: '',
+      availableUsers: isGroup ? grp.pushableCount : null,
+      groupId: isGroup ? grp.id : '', autoGroupId: '', demoNmt: f.demoNmt
+    };
+    store.bizMessages.unshift(task);
+    saveStore();
+    closeModal();
+    if (isGroup) {
+      if (isNow) { toast('订阅组来源无需准备，直接发送', 'ok'); bizSend(task.id); }
+      else toast('任务已创建，状态为待发送', 'ok');
+    } else if (!isNow && !plan.late) {
+      task.status = '等待准备';
+      saveStore();
+      toast('任务已创建，状态为等待准备（演示加速：约 2 秒后进入准备中）', 'ok');
+      bizStep(task.id, '等待准备', 2000, function () { bizStartPrepare(task.id); });
+    } else {
+      toast(isNow ? '任务已创建，立即开始准备' : '已过准备开始时间，创建后立即开始准备', 'ok');
+      bizStartPrepare(task.id);
+    }
+    renderPage();
+  }
+  function bizDetailHtml(id) {
+    const b = findBiz(id);
+    if (!b) return '';
+    const processing = BIZ_PENDING.indexOf(b.status) >= 0 && b.estimatedUsers && !b.tokenEndTime;
+    let html = '<dl class="detail-dl">' +
+      kv('任务名称 / Task Name', b.taskName) + kv('Campaign', b.campaign || '-') + kv('商业账户 / Business Account', b.businessAccount) +
+      kv('人群来源 / Audience Source', b.audienceSource ? b.audienceSource + (b.sourceName ? '：' + b.sourceName : '') : '-') +
+      kv('目标数量 / Target Users', String(b.targetUsers) + (processing ? '（预计）' : '')) +
+      kv('可发送人数 / Available Users', processing ? '处理中' : (b.availableUsers != null ? String(b.availableUsers) : '-')) +
+      kv('状态 / Status', null, statusTag(b.status)) +
+      kv('计划发送时间 / Scheduled Time', b.sendingTime) +
+      kv('准备开始时间 / Prepare Start Time', b.prepareStartTime || '-') +
+      kv('nmt 开始时间 / Token Start Time', b.tokenStartTime || '-') +
+      kv('nmt 完成时间 / Token End Time', b.tokenEndTime || '-') +
+      kv('实际发送时间 / Actual Send Time', b.actualSendTime || '-') +
+      '</dl>';
+    html += '<div class="field-hint" style="margin:14px 0 8px;">用户明细：token 替换 loginname，不显示 phone。</div>';
+    if (processing) {
+      html += emptyHtml('处理中');
+    } else if (b.status === '已取消' && !b.tokenEndTime && b.estimatedUsers) {
+      html += emptyHtml('-');
+    } else {
+      html += '<div class="tbl-wrap"><table class="tbl"><thead><tr><th class="no-sort">Token</th><th class="no-sort">Status</th></tr></thead><tbody>';
+      for (let i = 1; i <= 5; i++) {
+        html += '<tr><td>NMT-' + esc(b.id.toUpperCase()) + '-' + String(1000 + i * 37) + '...</td><td>' + statusTag(b.status === '失败' ? '失败' : '成功') + '</td></tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+    return html;
   }
 
   /* ========== Modal renderer ========== */
@@ -2226,6 +2554,16 @@ table.tbl {
       xl = true;
       body = createFormHtml();
       ft = '<button class="btn" data-act="modal-cancel">取消</button><button class="btn primary" data-act="submit-create">提交发送</button>';
+    } else if (m.type === 'create-biz') {
+      title = '新建 Biz 消息';
+      xl = true;
+      body = bizFormHtml();
+      ft = '<button class="btn" data-act="modal-cancel">取消</button><button class="btn primary" data-act="submit-biz">Confirm</button>';
+    } else if (m.type === 'biz-detail') {
+      title = '消息任务详情';
+      wide = true;
+      body = bizDetailHtml(m.id);
+      ft = '<button class="btn" data-act="modal-cancel">关闭</button>';
     } else if (m.type === 'sub-detail') {
       const user = m.user;
       const types = m.types || [user];
@@ -2586,6 +2924,37 @@ table.tbl {
       if (titleEl) titleEl.textContent = state.createForm.messageTitle || '消息标题';
       if (bodyEl) bodyEl.textContent = state.createForm.messageContent || '消息内容将显示在这里';
     }
+  });
+
+  document.addEventListener('click', function (e) {
+    const t = e.target.closest('[data-act]');
+    if (!t) return;
+    const act = t.getAttribute('data-act');
+    const id = t.getAttribute('data-id');
+    if (act === 'open-create-biz') openCreateBizModal();
+    else if (act === 'submit-biz') submitBiz();
+    else if (act === 'biz-detail') { state.modal = { type: 'biz-detail', id: id }; renderModal(); }
+    else if (act === 'cancel-biz') {
+      openConfirm({
+        title: '取消任务', message: '取消后不再发送；已创建的任务专属订阅组保留。', okText: 'Cancel Task', danger: true,
+        onOk: function () {
+          const b = findBiz(id);
+          if (!b || BIZ_CANCELABLE.indexOf(b.status) < 0) { toast('当前状态不可取消', 'err'); return; }
+          b.status = '已取消';
+          saveStore();
+          toast('任务已取消', 'ok');
+          renderPage();
+        }
+      });
+    }
+  });
+  document.addEventListener('change', function (e) {
+    const k = e.target.getAttribute('data-biz-field');
+    if (k) bizFieldChange(k, e.target);
+  });
+  document.addEventListener('input', function (e) {
+    const k = e.target.getAttribute('data-biz-field');
+    if (k && state.bizForm && (k === 'taskName' || k === 'content')) state.bizForm[k] = e.target.value;
   });
 
   document.addEventListener('keydown', function (e) {
