@@ -710,7 +710,7 @@ table.tbl {
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
 (function () {
-  const LS_KEY = 'dplus_mbm_v6';
+  const LS_KEY = 'dplus_mbm_v7';
   const PAGE_SIZE = 10;
 
   const CATALOG = {
@@ -832,7 +832,7 @@ table.tbl {
       { id: 'sg_2', tokenStatus: '已就绪', lastSendAt: '2026-10-26 10:00:00', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Support', groupName: '八月新注册用户组', memberCount: 2140, pushableCount: 749, source: 'New User', createdAt: '2026-08-11 14:05:20' },
       { id: 'sg_3', tokenStatus: '待处理', lastSendAt: '', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'Rewards Page', groupName: '积分活跃用户组', memberCount: 860, pushableCount: 301, source: 'High Value', createdAt: '2026-08-12 10:18:44' },
       { id: 'sg_4', tokenStatus: '处理中', lastSendAt: '', platform: 'messenger', businessAccount: 'Rewards Messenger', facebookPage: 'VIP Club', groupName: 'VIP 周末召回组', memberCount: 540, pushableCount: 189, source: 'Inactive 7d', createdAt: '2026-08-13 16:40:00' },
-      { id: 'sg_5', tokenStatus: '失败', lastSendAt: '', platform: 'messenger', businessAccount: 'Promo Messenger', facebookPage: 'Promo Page', groupName: '闪购名单导入组', memberCount: 1460, pushableCount: 511, source: 'flash_sale_users.csv', createdAt: '2026-08-14 08:22:10' },
+      { id: 'sg_5', tokenStatus: '失败', retryCount: 0, retryAlwaysFail: true, lastSendAt: '', platform: 'messenger', businessAccount: 'Promo Messenger', facebookPage: 'Promo Page', groupName: '闪购名单导入组', memberCount: 1460, pushableCount: 511, source: 'flash_sale_users.csv', createdAt: '2026-08-14 08:22:10' },
       { id: 'sg_6', tokenStatus: '待处理', lastSendAt: '', platform: 'messenger', businessAccount: 'BingoPlus Messenger', facebookPage: 'BingoPlus Official', groupName: '存款用户组', memberCount: 970, pushableCount: 339, source: 'Deposit', createdAt: '2026-08-15 11:11:11' },
       { id: 'sg_7', tokenStatus: '待处理', lastSendAt: '', platform: 'viber', businessAccount: 'BingoPlus Viber', facebookPage: '', groupName: 'Viber 服务通知组', memberCount: 1500, pushableCount: 525, source: 'viber_service_list.csv', createdAt: '2026-08-15 19:02:33' },
       { id: 'sg_8', tokenStatus: '待处理', lastSendAt: '', platform: 'viber', businessAccount: 'Rewards Viber', facebookPage: '', groupName: 'Viber 促销订阅组', memberCount: 800, pushableCount: 280, source: 'High Value', createdAt: '2026-08-16 09:45:00' }
@@ -1560,7 +1560,7 @@ table.tbl {
         '<td>' + esc(String(g.memberCount || 0)) + '</td><td>' + (g.tokenStatus === '已就绪' ? esc(String(g.pushableCount || 0)) : '-') + '</td>' +
         '<td>' + statusTag(g.tokenStatus || '待处理') + '</td>' +
         '<td>' + esc(g.createdAt) + '</td>' +
-        '<td class="col-actions">' + (g.tokenStatus === '失败' ? '<button class="btn sm" data-act="retry-group" data-id="' + esc(g.id) + '">重试</button>' : '-') + '</td></tr>';
+        '<td class="col-actions">' + (g.tokenStatus === '失败' ? ((g.retryCount || 0) >= 3 ? '<span class="field-hint">已重试 3 次，请新建订阅组</span>' : '<button class="btn sm" data-act="retry-group" data-id="' + esc(g.id) + '">重试（' + (g.retryCount || 0) + '/3）</button>') : '-') + '</td></tr>';
     });
     html += '</tbody></table></div>' + pager(pg);
     el.innerHTML = html;
@@ -2316,7 +2316,7 @@ table.tbl {
         eligItem(fmtLead(plan.est), '预计 nmt 耗时') + eligItem(fmtLead(plan.lead), '提前准备时间') + '</div>' +
         '<dl class="detail-dl" style="margin-top:10px;">' +
         kv('预计准备开始时间 / Estimated Prepare Start Time', plan.immediate ? '创建后立即开始准备' : (plan.late ? '将立即开始准备（已过 ' + toDisplayDt(plan.start) + '）' : toDisplayDt(plan.start))) + '</dl>' +
-        '<div class="field-hint">预计耗时 = 人数 ÷ 130000 × 60 + 45 分钟；提前准备时间 = max(60 分钟, 向上取整到 30 分钟档)。到点重新读取名单并提交 Infobip；到计划时间 nmt 仍未完成则顺延，不设上限。</div>' +
+        '<div class="field-hint">预计耗时 = 人数 ÷ 130000 × 60 + 45 分钟；提前准备时间 = max(60 分钟, 向上取整到 30 分钟档)。已就绪的组无需准备，直接待发送；待处理的组到点提交 Infobip，到计划时间 nmt 仍未完成则顺延，不设上限。名单为订阅组创建时的名单。</div>' +
         (plan.late ? '<div class="warn-bar">已过准备开始时间：不拦截创建，创建后立即开始准备，可能晚于计划时间发送。</div>' : '');
     }
     pv += '<div style="font-weight:600;margin:14px 0 4px;">演示设置（非产品字段）</div>' +
@@ -2429,14 +2429,18 @@ table.tbl {
       targetUsers: grp.memberCount, sendingTimeType: f.sendingTimeType,
       sendingTime: isNow ? toDisplayDt(new Date()) : toDisplayDt(f.scheduledAt),
       status: '待发送', audienceSource: 'Group', sourceName: grp.groupName, groupId: grp.id,
-      estimatedUsers: grp.memberCount, prepareStartTime: plan.start ? toDisplayDt(plan.start) : '',
+      estimatedUsers: grp.memberCount, prepareStartTime: (!ready && plan.start) ? toDisplayDt(plan.start) : '',
       tokenStartTime: '', tokenEndTime: '', actualSendTime: '',
       availableUsers: ready ? grp.pushableCount : null, demoNmt: f.demoNmt
     };
     store.bizMessages.unshift(task);
     saveStore();
     closeModal();
-    if (!isNow && !plan.late) {
+    if (ready) {
+      task.prepareStartTime = '';
+      toast(isNow ? '订阅组已就绪，直接发送' : '订阅组已就绪，无需准备，任务进入待发送', 'ok');
+      if (isNow) bizSend(task.id); else saveStore();
+    } else if (!isNow && !plan.late) {
       task.status = '等待准备'; saveStore();
       toast('任务已创建，状态为等待准备（演示加速：约 2 秒后进入准备中）', 'ok');
       bizStep(task.id, '等待准备', 2000, function () { bizStartPrepare(task.id); });
@@ -2888,11 +2892,12 @@ table.tbl {
     const id = t.getAttribute('data-id');
     if (act === 'retry-group') {
       const g = findGroup(id);
-      if (!g || g.tokenStatus !== '失败') return;
+      if (!g || g.tokenStatus !== '失败' || (g.retryCount || 0) >= 3) return;
+      g.retryCount = (g.retryCount || 0) + 1;
       g.tokenStatus = '处理中'; saveStore(); toast('已重新提交 Infobip 处理 token', 'ok'); renderPage();
       setTimeout(function () {
-        g.tokenStatus = '已就绪'; g.pushableCount = Math.floor(g.memberCount * 0.7); saveStore();
-        toast('订阅组「' + g.groupName + '」token 处理完成', 'ok');
+        if (g.retryAlwaysFail) { g.tokenStatus = '失败'; saveStore(); toast('重试失败（演示：该组每次重试都失败）', 'err'); }
+        else { g.tokenStatus = '已就绪'; g.pushableCount = Math.floor(g.memberCount * 0.7); saveStore(); toast('订阅组「' + g.groupName + '」token 处理完成', 'ok'); }
         if (state.route === 'subscription' && !state.modal) renderPage();
       }, 4000);
     }
