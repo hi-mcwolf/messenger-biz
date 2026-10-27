@@ -710,7 +710,7 @@ table.tbl {
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
 (function () {
-  const LS_KEY = 'dplus_mbm_v5';
+  const LS_KEY = 'dplus_mbm_v6';
   const PAGE_SIZE = 10;
 
   const CATALOG = {
@@ -983,7 +983,7 @@ table.tbl {
     return ph + list.map(it => {
       const v = typeof it === 'string' ? it : it.value;
       const l = typeof it === 'string' ? it : it.label;
-      return '<option value="' + esc(v) + '"' + (String(v) === String(value) ? ' selected' : '') + '>' + esc(l) + '</option>';
+      return '<option value="' + esc(v) + '"' + (it.disabled ? ' disabled' : '') + (String(v) === String(value) ? ' selected' : '') + '>' + esc(l) + '</option>';
     }).join('');
   }
   function messengerAccounts() {
@@ -1551,14 +1551,16 @@ table.tbl {
       th('可推送数量 / Pushable', 'pushableCount', ts) +
       th('Token 状态 / Token Status', 'tokenStatus', ts) +
       th('创建时间 / Created At', 'createdAt', ts) +
+      '<th class="no-sort">操作</th>' +
       '</tr></thead><tbody>';
-    if (!pg.rows.length) html += '<tr><td colspan="9">' + emptyHtml('没有符合筛选条件的订阅用户组') + '</td></tr>';
+    if (!pg.rows.length) html += '<tr><td colspan="10">' + emptyHtml('没有符合筛选条件的订阅用户组') + '</td></tr>';
     pg.rows.forEach(g => {
       html += '<tr><td>' + esc(g.platform) + '</td><td>' + esc(g.businessAccount) + '</td>' +
         '<td>' + esc(g.facebookPage || '-') + '</td><td>' + esc(g.groupName) + '</td>' +
         '<td>' + esc(String(g.memberCount || 0)) + '</td><td>' + (g.tokenStatus === '已就绪' ? esc(String(g.pushableCount || 0)) : '-') + '</td>' +
         '<td>' + statusTag(g.tokenStatus || '待处理') + '</td>' +
-        '<td>' + esc(g.createdAt) + '</td></tr>';
+        '<td>' + esc(g.createdAt) + '</td>' +
+        '<td class="col-actions">' + (g.tokenStatus === '失败' ? '<button class="btn sm" data-act="retry-group" data-id="' + esc(g.id) + '">重试</button>' : '-') + '</td></tr>';
     });
     html += '</tbody></table></div>' + pager(pg);
     el.innerHTML = html;
@@ -2250,6 +2252,15 @@ table.tbl {
   function bizGroups(f) {
     return (store.subscriptionGroups || []).filter(g => g.platform === 'messenger' && g.businessAccount === f.businessAccount && g.facebookPage === f.facebookPage);
   }
+  const BIZ_UNFINISHED = ['等待准备', '准备中', '待发送', '发送延迟', '发送中'];
+  function groupOccupied(g) { return store.bizMessages.some(b => b.groupId === g.id && BIZ_UNFINISHED.indexOf(b.status) >= 0); }
+  function groupOption(g) {
+    const st = g.tokenStatus || '待处理';
+    let note = st, dis = false;
+    if (st === '待处理' && groupOccupied(g)) { note = '待处理，已被任务占用'; dis = true; }
+    else if (st === '处理中' || st === '失败') { dis = true; note = st + '，不可选'; }
+    return { value: g.id, label: g.groupName + '（' + fmtMoney(g.memberCount) + ' 人，' + note + '）', disabled: dis };
+  }
   function bizPlan(f) {
     const g = (store.subscriptionGroups || []).find(x => x.id === f.groupId);
     if (!g) return null;
@@ -2287,8 +2298,8 @@ table.tbl {
       wrapErr(f.errors, 'campaign', '<div class="form-row"><label>Campaign<span class="req">*</span></label><select data-biz-field="campaign">' + optList(camps.map(c => c.campaignName), f.campaign, camps.length ? '请选择 Campaign' : '该账号下没有可用 Campaign') + '</select></div>') +
       wrapErr(f.errors, 'taskName', '<div class="form-row"><label>Task Name<span class="req">*</span></label><input type="text" data-biz-field="taskName" maxlength="100" placeholder="1–100 个字符" value="' + esc(f.taskName) + '" /></div>') +
       wrapErr(f.errors, 'groupId', '<div class="form-row"><label>订阅组 / Group<span class="req">*</span></label>' +
-        '<select data-biz-field="groupId">' + optList(groups.map(g => ({ value: g.id, label: g.groupName + '（' + fmtMoney(g.memberCount) + ' 人，' + (g.tokenStatus || '待处理') + '）' })), f.groupId, groups.length ? '请选择订阅组' : '当前 Page 下没有订阅组') + '</select>' +
-        '<div class="field-hint">待处理、处理中、失败的组均可选；同一订阅组两次发送间隔须大于 24 小时</div></div>') +
+        '<select data-biz-field="groupId">' + optList(groups.map(groupOption), f.groupId, groups.length ? '请选择订阅组' : '当前 Page 下没有订阅组') + '</select>' +
+        '<div class="field-hint">已就绪的组可选；待处理的组仅限 1 个未完成任务使用；处理中、失败的组不可选；同一订阅组两次发送间隔须大于 24 小时</div></div>') +
       '<div class="form-row"><label>可发送人数 / Available Users</label><input type="text" disabled value="' + esc(avail) + '" /></div>' +
       '<div class="form-row"><label>Message Type<span class="req">*</span></label><select data-biz-field="messageType">' + optList(['Image', 'Text', 'Button'], f.messageType) + '</select></div>' +
       wrapErr(f.errors, 'content', '<div class="form-row"><label>消息内容 / Content<span class="req">*</span></label><textarea data-biz-field="content" maxlength="500">' + esc(f.content) + '</textarea></div>') +
@@ -2393,6 +2404,7 @@ table.tbl {
     if (!tn) e.taskName = '请填写任务名称';
     const grp = findGroup(f.groupId);
     if (!grp) e.groupId = '请选择订阅组';
+    else if (groupOption(grp).disabled) e.groupId = '该订阅组当前不可选：' + groupOption(grp).label;
     if (!(f.content || '').trim()) e.content = '请填写消息内容';
     let sched = new Date();
     if (f.sendingTimeType === '定时') {
@@ -2874,7 +2886,17 @@ table.tbl {
     if (!t) return;
     const act = t.getAttribute('data-act');
     const id = t.getAttribute('data-id');
-    if (act === 'open-create-biz') openCreateBizModal();
+    if (act === 'retry-group') {
+      const g = findGroup(id);
+      if (!g || g.tokenStatus !== '失败') return;
+      g.tokenStatus = '处理中'; saveStore(); toast('已重新提交 Infobip 处理 token', 'ok'); renderPage();
+      setTimeout(function () {
+        g.tokenStatus = '已就绪'; g.pushableCount = Math.floor(g.memberCount * 0.7); saveStore();
+        toast('订阅组「' + g.groupName + '」token 处理完成', 'ok');
+        if (state.route === 'subscription' && !state.modal) renderPage();
+      }, 4000);
+    }
+    else if (act === 'open-create-biz') openCreateBizModal();
     else if (act === 'submit-biz') submitBiz();
     else if (act === 'biz-detail') { state.modal = { type: 'biz-detail', id: id }; renderModal(); }
     else if (act === 'cancel-biz') {
